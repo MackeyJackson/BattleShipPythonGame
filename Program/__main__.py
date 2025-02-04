@@ -6,7 +6,6 @@ import os
 
 clickM = False
 
-# Define constants
 WINDOW_WIDTH = 1000
 WINDOW_HEIGHT = 600
 GRID_SIZE = 10
@@ -133,19 +132,15 @@ class Game:
                         self.CreditState = False
 
     def handle_events(self):
-        # Handle player inputs and game events
         BackButton = pygame.Rect(875, 0, 100, 40)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
-            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:  # Left mouse button
-                # Get mouse position
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:  
                 MousePos = event.pos
             
-                # Check if "Back" button is clicked
                 if BackButton.collidepoint(MousePos):
-                    # Perform the action for the "Back" button click (e.g., return to the menu)
                     self.MenuState = True
                     self.CreditState = False
                     self.Prerun()
@@ -156,12 +151,11 @@ class Game:
     def DisplayText(self, pos, message,length,delay):
         flag = True
         delay = int(delay / 2.8)
-        text_surface = font.render(f"{length}{message}!", flag, (255, 0, 255))  # Red color for hit
+        text_surface = font.render(f"{length}{message}!", flag, (255, 0, 255)) 
         self.screen.blit(text_surface, pos)  # Position the text at (100, 100)
         pygame.display.flip()
         pygame.time.delay(delay)
     def handle_player_turn(self, pos):
-        # Player's turn logic, check clicks, and attack
         global Playergameend
         global clickM
         des = True
@@ -197,7 +191,6 @@ class Game:
 
     def handle_computer_turn(self):
         pygame.mouse.set_visible(False)
-        # Computer's turn logic, randomly attack player's grid
         global computergameend
         global clickM
         des = True
@@ -221,7 +214,7 @@ class Game:
                                 sys.exit()
                                 clickM = True
                 else:
-                    self.player_board.grid[ComputerHitY][ComputerHitX] = 3  # Mark as miss
+                    self.player_board.grid[ComputerHitY][ComputerHitX] = 3
                     self.player_board.draw(self.screen, offset=(82.5, 50))
                     self.DisplayText((182.5+50, 250), 'miss', length='',delay=650)
                     self.current_turn = self.player  # Switch turn to computer
@@ -229,7 +222,6 @@ class Game:
                     self.player_board.draw(self.screen, offset=(82.5, 50))
                     self.DisplayText((182.5+50, 250), 'hit','',1000)
     def check_game_over(self):
-        # Check if all ships of either player or computer are sunk
         if self.player_board.all_ships_sunk() or self.computer_board.all_ships_sunk():
             print("Game Over")
             pygame.quit()
@@ -237,7 +229,6 @@ class Game:
 
     def draw(self):
         self.screen.fill((255, 255, 255))
-        # Draw boards, ships, hits, and misses
         self.player_board.draw(self.screen, offset=(45 + 75 / 2, 50))  # centers the board
         self.computer_board.draw(self.screen, offset=(520, 50))
         MouseX, MouseY = pygame.mouse.get_pos()
@@ -258,7 +249,6 @@ class Board:
             self.place_ship_recursively(length)
 
     def place_ship_recursively(self, ship_length):
-        # Recursively try placing a ship
         x, y = random.randint(0, GRID_SIZE-1), random.randint(0, GRID_SIZE-1)
         orientation = random.choice(['H', 'V'])
         
@@ -273,9 +263,6 @@ class Board:
             self.place_ship_recursively(ship_length)
 
     def can_place_ship(self, x, y, length, orientation):
-        # Check if a ship can be placed at the given coordinates
-        # Add boundary checks and overlap checks
-        #get ship length and start pos and orien, check if too close boarder
         #if orientation == 'V' and x >= 6
         print(f'testhere{self.ships}')
         print(len(self.grid))
@@ -328,7 +315,6 @@ class Board:
         if index >= ship.length:
             self.markSunkShip(ship)
             return True
-        #other shit
         x, y = ship.start_pos
         if ship.orientation == 'H':
             if self.grid[y][x + index] != 2:  # Check if part is not hit (hibt = 2)
@@ -354,14 +340,12 @@ class Board:
                 self.grid[y + i][x] = 4
 
     def draw(self, screen, offset):
-        # Draw the board with ships, hits, and misses
         BackButton = pygame.Rect(875, 0, 100, 40)
         pygame.draw.rect(screen, (255, 0, 0), BackButton)
         BackText = font.render('Back', True, (0, 0, 0))
         screen.blit(BackText, (880, 5))
         for row in range(GRID_SIZE):
             for col in range(GRID_SIZE):
-                # Draw each cell based on its state
                 rect = pygame.Rect(offset[0] + col * CELL_SIZE, offset[1] + row * CELL_SIZE, CELL_SIZE, CELL_SIZE)
                 pygame.draw.rect(screen, WATER_COLOR, rect)
                 if self.grid[row][col] == 1:
@@ -395,7 +379,6 @@ class Player:
         self.board = board
         self.is_computer = is_computer
 
-# Main execution
 if __name__ == '__main__':
     game = Game()
     game.Prerun()
